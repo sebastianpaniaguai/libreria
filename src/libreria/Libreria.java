@@ -49,7 +49,7 @@ public class Libreria {
                         int cant=teclado.nextInt();
                         System.out.println("Ingrese area: \n1.Química\n2.Física\n3.Tecnología\n4.Cálculo\n5.Programación");
                         String area="0";
-                        int op2;
+                        int op2=0;
                         do{
                         op2=teclado.nextInt();
                         switch(op2){
@@ -82,7 +82,9 @@ public class Libreria {
                             System.out.println("ingrese el nombre del libro que desea modificar...");
                             name=teclado.nextLine();
                             ResultSet resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '"+name+"'");
+                            if(resultado.next()){
                             int a=0;
+                            resultado.beforeFirst();
                             while(resultado.next())
                                 a=resultado.getInt("id");
                             System.out.println("1. Cambiar nombre del libro");
@@ -186,20 +188,40 @@ public class Libreria {
                                     }
                                     else break;
                             }
-                        }while(op2!=0);
+                            }else{
+                                System.out.println("El libro no aparece en la base de datos.");
+                                break;
+                            }
+                        }while(op!=0);
                         break;
                     case 3:
                         System.out.println("Esta a punto de eliminar un libro de la base de datos...");
                         System.out.println("Ingrese el nombre del libro que desea eliminar: ");
                         name=teclado.nextLine();
+                        ResultSet resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '%"+name+"%'");
+                        if(resultado.next()){
+                        resultado.beforeFirst();
                         estado.executeUpdate("DELETE FROM `libros` WHERE `nombre` LIKE '"+name+"'");
+                        System.out.println("Libro eliminado con exito.");
                         break;
+                        }
+                        else{
+                            System.out.println("El libro no aparece en la base de datos");
+                            break;
+                        }
                     case 4:
                         System.out.println("Por favor ingrese el nombre del libro: ");
                         name=teclado.nextLine();
-                        ResultSet resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '%"+name+"%'");
+                        resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '%"+name+"%'");
+                        if(resultado.next()){
+                            resultado.beforeFirst();
                         while(resultado.next()){
                             System.out.println(resultado.getString("id")+"\t"+resultado.getString("nombre")+"\t\t"+resultado.getString("autor")+"\t"+resultado.getString("year")+"\t"+resultado.getString("code")+"\t"+resultado.getString("cant")+"\t"+resultado.getString("area"));
+                        }
+                        }
+                        else{
+                            System.out.println("El libro no aparece en nuestra base de datos.");
+                            break;
                         }
                         break;
                     case 5:
@@ -209,7 +231,10 @@ public class Libreria {
                         name=teclado.nextLine();
                         boolean flag=false;
                         resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '"+name+"'");    
+                        if(resultado.next()){
+                            resultado.beforeFirst();
                         while(resultado.next()){
+                            if(resultado.getInt("cant")==0) {flag=true;break;}
                             newcant=resultado.getInt("cant")-1;
                             id=resultado.getInt("id");
                             newname=resultado.getString("nombre");
@@ -218,8 +243,8 @@ public class Libreria {
                             newcode=resultado.getString("code");
                             newname=resultado.getString("nombre");
                             newarea=resultado.getString("area");
-                            
                         }
+                        if(flag){System.out.println("No hay unidades disponibles");break;}
                         //Busco si el libro ya está prestado por ese usuario
                         ResultSet resultado2=estado.executeQuery("SELECT * FROM `librosPrestados` WHERE `nombre` LIKE '"+name+"' AND `cedula` LIKE '"+ced+"'");    
                         while(resultado2.next()){
@@ -236,14 +261,22 @@ public class Libreria {
                                 estado.executeUpdate("INSERT INTO `librosPrestados` VALUES (NULL,'"+ced+"', '"+newname+"', '"+newautor+"','"+newyear+"', '"+newcode+"', '"+1+"','"+newarea+"')");                            
                         }
                         else break;
+                        }
+                        else{
+                            System.out.println("El libro no aparece en nuestra base de datos.");
+                            break;
+                        }
                         break;
                     case 6:
                         System.out.println("Vas a Devolver un libro ");
                         System.out.println("Para continuar por favor ingrese su numero de identificacion: ");
-                        ced=teclado.nextLine();
+                        ced=teclado.nextLine();                            System.out.println("El libro no aparece en nuestra base de datos.");
+
                         System.out.println("Por favor ingrese el nombre del libro a prestar: ");
                         name=teclado.nextLine();
                         resultado=estado.executeQuery("SELECT * FROM `librosPrestados` WHERE `nombre` LIKE '"+name+"' AND `cedula` LIKE '"+ced+"'");    
+                        if(resultado.next()){
+                            resultado.beforeFirst();
                         while(resultado.next()){
                             idPrestado=resultado.getInt("id");
                             newcantPrestado=resultado.getInt("cant")-1;
@@ -259,17 +292,28 @@ public class Libreria {
                             estado.executeUpdate("DELETE FROM `librosPrestados` WHERE `cant` LIKE '0'");
                         }
                         else break;
+                        }
+                        else{
+                            System.out.println("No tienes ese libro registrado en tu lista de prestamos");
+                        }
                         break;
                     case 7:
                         System.out.println("Por favor ingrese su numero de cedula: ");
                         ced=teclado.nextLine();
                         flag=false;
-                        System.out.println("Listado de libros prestados asignados a su numero de identificacion:  ");
                         resultado=estado.executeQuery("SELECT * FROM `librosPrestados` WHERE `cedula` LIKE '"+ced+"'");    
+                        if(resultado.next()){
+                            resultado.beforeFirst();
+                            System.out.println("Listado de libros prestados asignados a su numero de identificacion:  ");
                         while(resultado.next()){
                             System.out.println(resultado.getString("nombre")+"\t\t"+resultado.getString("autor")+"\t"+resultado.getString("year")+"\t"+resultado.getString("code")+"\t"+resultado.getString("cant")+"\t"+resultado.getString("area"));
                         }
                         break;
+                        }
+                        else{
+                            System.out.println("No se registran libros prestados para esa identificación.");
+                            break;
+                        }
                     case 0:
                         break;
                 }
