@@ -17,8 +17,8 @@ public class Libreria {
         try {
             System.out.println("Intentando conectar a la base de datos...");
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/libreria", user, password);
-            //Connection con = DriverManager.getConnection("jdbc:mysql://db4free.net/contactossp", user2, password2);//Para db4free.net
+            //Connection con = DriverManager.getConnection("jdbc:mysql://localhost/libreria", user, password);
+            Connection con = DriverManager.getConnection("jdbc:mysql://db4free.net/libreriasp", user2, password2);//Para db4free.net
             System.out.println("Conexión existosa.");
             Statement estado= con.createStatement();
             do{
@@ -103,7 +103,7 @@ public class Libreria {
                                     newname=teclado.nextLine();
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `nombre` = '"+newname+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `nombre` = '"+newname+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("El libro ha sido actualizado con éxito, el nuevo nombre es: "+newname+". ");
                                         op2=0;
                                         break;
@@ -114,7 +114,7 @@ public class Libreria {
                                     newautor=teclado.nextLine();
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `autor` = '"+newautor+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `autor` = '"+newautor+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("El libro ha sido actualizado con éxito, el nuevo autor es: "+newautor+". ");
                                         op2=0;
                                         break;
@@ -125,7 +125,7 @@ public class Libreria {
                                     newyear=teclado.nextLine();
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `year` = '"+newyear+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `year` = '"+newyear+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("El libro ha sido actualizado con éxito, el nuevo año de publicacion es: "+newyear+". ");
                                         op2=0;
                                         break;
@@ -136,7 +136,7 @@ public class Libreria {
                                     newcant=teclado.nextInt();
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("La cantidad de libros ha sido actualizada con éxito, ahora hay: "+newcant+" disponibles.");
                                         op2=0;
                                         break;
@@ -147,7 +147,7 @@ public class Libreria {
                                     newcode=teclado.nextLine();
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `code` = '"+newcode+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `code` = '"+newcode+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("El libro ha sido actualizado con éxito, el nuevo codigo es: "+newcode+". ");
                                         op2=0;
                                         break;
@@ -181,7 +181,7 @@ public class Libreria {
                                     }while(op<1 || op>5);
                                     System.out.println("Esta seguro de realizar esta accion? [y/n]");
                                     if(teclado.next().compareTo("y")==0){
-                                        estado.executeUpdate("UPDATE `libreria`.`libros` SET `area` = '"+newarea+"' WHERE `libros`.`id` = '"+a+"';");
+                                        estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `area` = '"+newarea+"' WHERE `libros`.`id` = '"+a+"';");
                                         System.out.println("El libro ha sido actualizado con éxito, la nueva area es: "+newarea+". ");
                                         op2=0;
                                         break;
@@ -199,16 +199,20 @@ public class Libreria {
                         System.out.println("Ingrese el nombre del libro que desea eliminar: ");
                         name=teclado.nextLine();
                         ResultSet resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '%"+name+"%'");
-                        if(resultado.next()){
-                        resultado.beforeFirst();
-                        estado.executeUpdate("DELETE FROM `libros` WHERE `nombre` LIKE '"+name+"'");
-                        System.out.println("Libro eliminado con exito.");
-                        break;
-                        }
-                        else{
-                            System.out.println("El libro no aparece en la base de datos");
+                        System.out.println("Esta seguro de que desea realizar esta operacion? [y/n]");
+                        if(teclado.next()=="y"){
+                            if(resultado.next()){
+                            resultado.beforeFirst();
+                            estado.executeUpdate("DELETE FROM `libros` WHERE `nombre` LIKE '"+name+"'");
+                            System.out.println("Libro eliminado con exito.");
                             break;
+                            }
+                            else{
+                                System.out.println("El libro no aparece en la base de datos");
+                                break;
+                            }
                         }
+                        else break;
                     case 4:
                         System.out.println("Por favor ingrese el nombre del libro: ");
                         name=teclado.nextLine();
@@ -254,9 +258,9 @@ public class Libreria {
                         }
                         System.out.println("Esta seguro que desea realizar esta operacion? [y/n]");
                         if(teclado.next().compareTo("y")==0){
-                            estado.executeUpdate("UPDATE `libreria`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+id+"';");
+                            estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+id+"';");
                             if(flag)
-                                estado.executeUpdate("UPDATE `libreria`.`librosPrestados` SET `cant` = '"+newcantPrestado+"' WHERE `librosPrestados`.`id` = '"+idPrestado+"';");
+                                estado.executeUpdate("UPDATE `libreriasp`.`librosPrestados` SET `cant` = '"+newcantPrestado+"' WHERE `librosPrestados`.`id` = '"+idPrestado+"';");
                             else
                                 estado.executeUpdate("INSERT INTO `librosPrestados` VALUES (NULL,'"+ced+"', '"+newname+"', '"+newautor+"','"+newyear+"', '"+newcode+"', '"+1+"','"+newarea+"')");                            
                         }
@@ -272,7 +276,7 @@ public class Libreria {
                         System.out.println("Para continuar por favor ingrese su numero de identificacion: ");
                         ced=teclado.nextLine();                            System.out.println("El libro no aparece en nuestra base de datos.");
 
-                        System.out.println("Por favor ingrese el nombre del libro a prestar: ");
+                        System.out.println("Por favor ingrese el nombre del libro a devolver: ");
                         name=teclado.nextLine();
                         resultado=estado.executeQuery("SELECT * FROM `librosPrestados` WHERE `nombre` LIKE '"+name+"' AND `cedula` LIKE '"+ced+"'");    
                         if(resultado.next()){
@@ -283,12 +287,12 @@ public class Libreria {
                         }
                         System.out.println("Esta seguro que desea realizar esta operacion? [y/n]");
                         if(teclado.next().compareTo("y")==0){
-                            estado.executeUpdate("UPDATE `libreria`.`librosPrestados` SET `cant` = '"+newcantPrestado+"' WHERE `librosPrestados`.`id` = '"+idPrestado+"';");
+                            estado.executeUpdate("UPDATE `libreriasp`.`librosPrestados` SET `cant` = '"+newcantPrestado+"' WHERE `librosPrestados`.`id` = '"+idPrestado+"';");
                             resultado=estado.executeQuery("SELECT * FROM `libros` WHERE `nombre` LIKE '"+name+"'");    
                             while(resultado.next()){
                                 newcant=resultado.getInt("cant")+1;
                             }
-                            estado.executeUpdate("UPDATE `libreria`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+id+"';");
+                            estado.executeUpdate("UPDATE `libreriasp`.`libros` SET `cant` = '"+newcant+"' WHERE `libros`.`id` = '"+id+"';");
                             estado.executeUpdate("DELETE FROM `librosPrestados` WHERE `cant` LIKE '0'");
                         }
                         else break;
