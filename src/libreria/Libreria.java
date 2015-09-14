@@ -220,7 +220,7 @@ public class Libreria {
                         if(resultado.next()){
                             resultado.beforeFirst();
                         while(resultado.next()){
-                            System.out.println(resultado.getString("id")+"\t"+resultado.getString("nombre")+"\t\t"+resultado.getString("autor")+"\t"+resultado.getString("year")+"\t"+resultado.getString("code")+"\t"+resultado.getString("cant")+"\t"+resultado.getString("area"));
+                            System.out.println(resultado.getString("nombre")+"\t\t"+resultado.getString("autor")+"\t"+resultado.getString("year")+"\t"+resultado.getString("code")+"\t"+resultado.getString("cant")+"\t"+resultado.getString("area"));
                         }
                         }
                         else{
