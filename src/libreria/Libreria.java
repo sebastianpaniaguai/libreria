@@ -274,8 +274,7 @@ public class Libreria {
                     case 6:
                         System.out.println("Vas a Devolver un libro ");
                         System.out.println("Para continuar por favor ingrese su numero de identificacion: ");
-                        ced=teclado.nextLine();                            System.out.println("El libro no aparece en nuestra base de datos.");
-
+                        ced=teclado.nextLine();                            
                         System.out.println("Por favor ingrese el nombre del libro a devolver: ");
                         name=teclado.nextLine();
                         resultado=estado.executeQuery("SELECT * FROM `librosPrestados` WHERE `nombre` LIKE '"+name+"' AND `cedula` LIKE '"+ced+"'");    
@@ -299,6 +298,7 @@ public class Libreria {
                         }
                         else{
                             System.out.println("No tienes ese libro registrado en tu lista de prestamos");
+                            break;
                         }
                         break;
                     case 7:
